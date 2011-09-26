@@ -45,7 +45,7 @@ public class TimelineAdapter extends BaseAdapter {
         message.setText(chirp.getMessage());
 
         TextView timestamp = (TextView) chirpView.findViewById(R.id.timestamp);
-        timestamp.setText(chirp.getTimestamp().toString());
+        timestamp.setText(DateFormatter.toDatetimeStr(chirp.getTimestamp()));
 
         return chirpView;
     }
