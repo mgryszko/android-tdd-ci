@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="es.osoco.chirp.test">
+
+    <application android:name=".Application">
+        <uses-library android:name="android.test.runner" />
+    </application>
+
+    <instrumentation android:targetPackage="es.osoco.chirp"
+        android:name="android.test.InstrumentationTestRunner" />
+
+    <uses-permission
+        android:name="android.permission.INJECT_EVENTS" />
+
+    <uses-sdk
+        android:targetSdkVersion="7" />
+</manifest>

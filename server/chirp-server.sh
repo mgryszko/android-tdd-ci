@@ -46,6 +46,7 @@ function stop_server {
     if [ -e $BASE_DIR/grails.pid ]; then
         kill $1 `cat $BASE_DIR/grails.pid`
     fi
+    return 0
 }
 
 echo "BASE_DIR: $BASE_DIR"
