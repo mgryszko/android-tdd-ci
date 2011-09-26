@@ -4,21 +4,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListAdapter;
 import android.widget.TextView;
+import com.google.inject.Inject;
 
 import java.util.List;
 
 public class TimelineAdapter extends BaseAdapter {
+    @Inject
+    private LayoutInflater inflater;
 
-    private TimelineActivity activity;
     private List<Chirp> chirps;
 
-    public void setActivity(TimelineActivity activity) {
-        this.activity = activity;
-    }
-
-    public void setChirps(List<Chirp> chirps) {
+    public ListAdapter withChirps(List<Chirp> chirps) {
         this.chirps = chirps;
+        return this;
     }
 
     public int getCount() {
@@ -34,7 +34,6 @@ public class TimelineAdapter extends BaseAdapter {
     }
 
     public View getView(int i, View view, ViewGroup viewGroup) {
-        LayoutInflater inflater = LayoutInflater.from(activity);
         View chirpView = inflater.inflate(R.layout.timeline_item, null);
 
         Chirp chirp = getItem(i);

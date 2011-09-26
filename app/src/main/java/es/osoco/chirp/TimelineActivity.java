@@ -1,15 +1,19 @@
 package es.osoco.chirp;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ListView;
-import org.springframework.web.client.RestTemplate;
+import com.google.inject.Inject;
+import roboguice.activity.RoboActivity;
+import roboguice.inject.InjectView;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
+public class TimelineActivity extends RoboActivity {
+    @Inject
+    private ChirpRepository chirpRepository;
 
-public class TimelineActivity extends Activity {
+    @InjectView(R.id.timelineView)
+    private ListView timelineView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -21,20 +25,10 @@ public class TimelineActivity extends Activity {
     }
 
     private List<Chirp> loadTimeline() {
-        return executeJsonRequest("http://10.0.2.2:8080/chirp-server/chirp/timeline?chirper={chirper}", "mgryszko");
-    }
-
-    private List<Chirp> executeJsonRequest(String uri, Object... requestParams) {
-        RestTemplate restTemplate = new RestTemplate();
-        return asList(restTemplate.getForObject(uri, Chirp[].class, requestParams));
+        return chirpRepository.findTimelineOf("mgryszko");
     }
 
     private void displayTimeline(List<Chirp> chirps) {
-        TimelineAdapter adapter = new TimelineAdapter();
-        adapter.setActivity(this);
-        adapter.setChirps(chirps);
-        ListView timelineView = (ListView) findViewById(R.id.timelineView);
-        timelineView.setAdapter(adapter);
+        timelineView.setAdapter(getInjector().getInstance(TimelineAdapter.class).withChirps(chirps));
     }
 }
-
