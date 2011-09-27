@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=1024, user-scalable=no">
+
+    <title>Android TDD CI</title>
+
+    <link rel="stylesheet" href="deck.js/deck.core.css"/>
+    <link rel="stylesheet" href="deck.js/goto/deck.goto.css"/>
+    <link rel="stylesheet" href="deck.js/hash/deck.hash.css"/>
+    <link rel="stylesheet" href="deck.js/menu/deck.menu.css"/>
+    <link rel="stylesheet" href="deck.js/navigation/deck.navigation.css"/>
+    <link rel="stylesheet" href="deck.js/status/deck.status.css"/>
+    <link rel="stylesheet" href="deck.js/themes/transition/horizontal-slide.css">
+
+    <link rel="stylesheet" href="deck.js/themes/style/osoco.css"/>
+    <link rel="stylesheet" href="deck.js/themes/style/osoco_menu.css"/>
+    <link rel='stylesheet' href='http://fonts.googleapis.com/css?family=Love+Ya+Like+A+Sister'/>
+    <link rel="stylesheet" href="slides.css">
+
+    <link rel="stylesheet" href="http://yandex.st/highlightjs/6.0/styles/default.min.css">
+
+    <script src="deck.js/modernizr.custom.js"></script>
+</head>
+
+<body class="deck-container">
+
+<div class="theme-menu">
+    <ul>
+        <li>Android TDD and Continuous Integration</li>
+        <li>|</li>
+        <li><a href="http://grysz.com" target="_blank">Marcin Gryszko</a></li>
+        <li>|</li>
+        <li><a href="http://www.osoco.es" target="_blank">Osoco</a></li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>TDD and Continuous Integration with Android</h1>
+</div>
+
+<div class="slide">
+    <h2>Me</h2>
+
+    <h3>Groovy/Grails (sometimes Java) hacker</h3>
+    <h3>casual Android developer</h3>
+    <h3>test addicted and clean code lover</h3>
+    <h3>&nbsp;</h3>
+    <h3>@mgryszko</h3>
+    <h3>marcin.gryszko@osoco.es</h3>
+    <h3>marcin@grysz.com</h3>
+</div>
+
+<div class="slide">
+    <h2>Osoco - we are...</h2>
+    <h3>Small but outstanding software development shop</h3>
+    <h3>Groovy and Grails hackers</h3>
+    <h3>on EC2 cloud nine</h3>
+    <h3>TDD mantra singers</h3>
+    <h3>Quality preachers</h3>
+</div>
+
+<div class="slide">
+    <h2>Our new gig</h2>
+    <h3>Chirper, new player on the microblogging scene, wants us to develop a</h3>
+    <h3 class="center">new</h3>
+    <h3 class="center">revolutionary</h3>
+    <h3 class="center">cutting-edge</h3>
+    <h3 class="center">innovative</h3>
+    <h3>Android client for its online service</h3>
+</div>
+
+<div class="slide">
+    <h2>After endless meetings, inception workshops and story writing sessions...</h2>
+    <p>We coined some user stories for the first release:</p>
+    <ul>
+        <li>See what other chirpers are saying</li>
+        <li>Tell the world what I have on my mind</li>
+        <li>Follow interesting folks</li>
+        <li>...</li>
+    </ul>
+    <p>We have a Chirp test server that we can fully control.</p>
+</div>
+
+<div class="slide">
+    <h2>First task - implement a "walking skeleton"</h2>
+    <blockquote>
+        <p>
+            implementation of the thinnest possible slice of real functionality that we can automatically build, deploy,
+            and test end-to-end
+        </p>
+        <p>
+            <cite>Growing Object Oriented Software, Guided By Tests by Steeve Freeman, Nat Pryce</cite><br/>
+            <cite>original idea by <a href="http://alistair.cockburn.us/Walking+skeleton" target="_blank">Alistair Cockburn</a></cite>
+        </p>
+    </blockquote>
+</div>
+
+<div class="slide">
+    <h2>Next steps</h2>
+    <img src="images/walking_skeleton.jpg"/>
+    <p>
+        <cite>Source: Growing Object Oriented Software, Guided By Tests</cite>
+    </p>
+</div>
+
+<div class="slide">
+    <h1>Understand the problem</h1>
+</div>
+
+<div class="slide">
+    <h1>We do :)</h1>
+</div>
+
+<div class="slide">
+    <h1>Sketch the architecture</h1>
+</div>
+
+<div class="slide">
+    <h2>Architecture - hacking way</h2>
+    <img src="images/architecture_hacking.jpg" />
+</div>
+
+<div class="slide">
+    <h2>Steps to develop a functionality</h2>
+    <ul>
+        <li>Write some code</li>
+        <li>Test it <strong>manually</strong> in the emulator (maybe in the handset)</li>
+        <li>Repeat the steps above</li>
+        <li>Release the application archive (APK)</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Architecture - with tests and CI</h2>
+    <ul>
+        <li>Automated tests exercising app functions</li>
+        <li>Continuous Integration server runs emulator and tests</li>
+    </ul>
+    <img src="images/architecture_tests_ci.jpg"/>
+</div>
+
+<div class="slide">
+    <h2>Android testing support</h2>
+    <img src="images/android_test_framework.jpg"/>
+</div>
+
+<div class="slide">
+    <h2>Android testing support</h2>
+    <ul>
+        <li>Integrated into the Android SDK</li>
+        <li>Based on JUnit 3</li>
+        <li>Base classes for integration and functional tests</li>
+        <li>
+            Executed in the <strong>Dalvik VM</strong> == in the emulator/handset<br/>
+            Even a Hello World test inheriting from the <code>junit.framework.TestCase</code>!
+        </li>
+        <li>
+            Test suite as separate application<br/>
+            Two packages: application APK and test APK
+        </li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>Automate build and deployment</h1>
+</div>
+
+<div class="slide">
+    <h2>Ant</h2>
+    <ul>
+        <li>Supported out of the box by Android SDK and Eclipse ADT</li>
+        <li>Build file created with <code>android</code> command</li>
+        <li>Project layout as in Eclipse</li>
+        <li>
+            Defines project lifecycle:<br/>
+            <code>clean</code>, <code>compile</code>, <code>debug</code>, <code>run-tests</code>, <code>coverage</code>,
+            <code>release</code>, <code>install</code>/<code>uninstall</code>
+        </li>
+        <li>Extreme flexibility</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Maven - maven-android-plugin</h2>
+    <ul>
+        <li>Requires additional Eclipse plugins (M2Eclipse, m2e-android)</li>
+        <li>Powerful archetype for creating application and test projects in one step</li>
+        <li>Maven project layout</li>
+        <li>3.0-alpha - same functionality as Ant (2.9 lacks code coverage calculation)</li>
+        <li>Dependency management included</li>
+    </ul>
+
+    <div class="note">
+        <h3>Other Maven advantages</h3>
+        <ul>
+            <li>Undeploy before deploy - avoid stale APK versions</li>
+        </ul>
+    </div>
+</div>
+
+<div class="slide">
+    <h1>My <strong>personal</strong> choice: <strong>Maven</strong></h1>
+
+    <div class="note">
+        <h3>Demo</h3>
+        <ul>
+            <li>Create application and test projects with release configuration</li>
+            <pre><code>mvn archetype:generate -DarchetypeArtifactId=android-release -DarchetypeGroupId=de.akquinet.android.archetypes -DarchetypeVersion=1.0.6 -DgroupId=es.osoco -DartifactId=chirp -Dpackage=es.osoco.chirp
+mv chirp to_remove
+mv to_remove/* .
+rmdir to_remove
+            </code></pre>
+        </ul>
+
+        <h3>Git tag</h3>
+        <ul>
+            <li>before: init</li>
+            <li>after: project_skeleton</li>
+        </ul>
+
+        <h3>Ant</h3>
+        <p>
+            Create application project:<br/>
+            <code>android create project --target android-7 --name chirp --path chirp --activity MainActivity --package es.osoco.chirp</code>
+        </p>
+        <p>
+            Create test project:</br>
+            <code>android create test-project --path chirp-tests --name chirp_test --main ../chirp</code>
+        </p>
+    </div>
+</div>
+
+<div class="slide">
+    <h2>Automate deployment</h2>
+    <pre><code class="bash">$ mvn android:deploy
+$ mvn android:undeploy</code></pre>
+</div>
+
+<div class="slide">
+    <h2>Automate end-to-end tests</h2>
+    <pre><code class="bash">$ mvn integration-test</code></pre>
+</div>
+
+<div class="slide">
+    <h2>Automate release</h2>
+    <ul>
+        <li>Obtain a public-private key pair</li>
+        <pre><code class="bash">$ keytool -genkeypair -v -alias chirprel -keyalg RSA -keysize 2048 -dname "CN=Osoco,O=Osoco,C=es" -validity 10950 -keypass chirprel -keystore chirp.keystore -storepass chirprel</code></pre>
+        <li>Build in release mode:</li>
+        <li>Strip unused classes and methods; obfuscate (optional)</li>
+        <li>Sign with your private key</li>
+        <li>Align the final APK package</li>
+        <pre><code class="bash">$ mvn install -Prelease -Dsign.keystore=$HOME/projects/personal/android-tdd-ci/chirp.keystore -Dsign.alias=chirprel -Dsign.storepass=chirprel -Dsign.keypass=chirprel</code></pre>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Configure Jenkins</h2>
+    <ul>
+        <li>Install Android Emulator Plugin</li>
+        <li>Configure Android SDK</li>
+        <img src="images/jenkins_settings_android_sdk.png"/>
+
+        <div class="note">
+            <h3>Configure Git for Jenkins</h3>
+            <pre><code class="bash">sudo su - jenkins
+git config --global user.email "jenkins@osoco.es"
+git config --global user.name "Jenkins"
+</code></pre>
+        </div>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Jenkins build job</h2>
+    Emulator settings
+    <img src="images/jenkins_build_emulator_config.png" height="500"/>
+</div>
+
+<div class="slide">
+    <h2>Jenkins build job</h2>
+    Maven settings
+    <img src="images/jenkins_build_maven_config.png"/>
+    Test reports configuration
+    <img src="images/jenkins_build_test_report_config.png"/>
+
+    <h3>Demo</h3>
+    <ul>
+        <li>Start Jenkins</li>
+        <li>Show installed plugins</li>
+        <li>Show build job configuration</li>
+        <li>Launch chirp build job</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>Iteration "zero" completed</h1>
+</div>
+
+<div class="slide">
+    <h1>Let's shoot our tracer bullet</h1>
+</div>
+
+<div class="slide">
+    <h1>See what other chirpers are saying aka display the timeline</h1>
+</div>
+
+<div class="slide">
+    <h2>Write a failing acceptance test</h2>
+    <ul>
+        <li>HelloAndroidActivity -> TimelineActivity (and test)</li>
+        <li>Rough sketch</li>
+        <pre><code class="java">timelineDriver
+    .waitUntilTimelineLoaded(expectedChirps().size());
+assertTimelineEqualTo(timelineDriver,
+    expectedChirps());
+</code></pre>
+        <li>Page Object (Activity Object?) pattern - <code>timelineDriver</code></li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Implement TimelineDriver</h2>
+    <ul>
+        <li>Chirps will be displayed in a list view</li>
+        <pre><code class="java">waitUntilTimelineLoaded(int timelineSize)</code></pre>
+        <li>How do we know if the list has already N elements?</li>
+        <li><code>ActivityInstrumentationTestCase2</code> and <code>ViewAsserts</code> in Android SDK are rather poor...</li>
+    </ul>
+    <h3>Solution - Robotium!</h3>
+    <ul>
+        <li>Add Solo to the test case and <code>TimelineDriver</code></li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Hamcrest matchers in Android tests</h2>
+    <ul>
+        <li>We want to have expressive assertions in</li>
+        <pre><code class="java">assertTimelineEqualTo(List<Chirp> expectedTimeline)</code></pre>
+        <li>Hamcrest doesn't work out of the box inside Android</li>
+        <li>Remove LICENCE.txt from Hamcrest jars and tweak poms</li>
+        <li>Create your own Hamcrest artifacts with Android classifier</li>
+        <pre><code>hamcrest-core-1.1-android.jar
+hamcrest-library-1.1-android.jar
+hamcrest-integration-1.1-android.jar</code></pre>
+    </ul>
+
+</div>
+
+<div class="slide">
+    <h1>Now let's make the test pass!</h1>
+
+    <div class="note">
+        <h3>Demo</h3>
+        <ul>
+            <li>Implement TimelineTest.test_chirps_are_displayed_timely_ordered, TimelineDriver</li>
+            <li>Tests are falling</li>
+            <li>Extend TimelineActivity, implement TimelineAdapter</li>
+        </ul>
+
+        <h3>Git tag</h3>
+        <ul>
+            <li>before: project_skeleton</li>
+            <li>in-between: first_acceptance_test</li>
+            <li>after: tracer_bullet</li>
+        </ul>
+    </div>
+</div>
+
+<div class="slide">
+    <h1>
+        Target hit<br/>
+        our very first functionality is already under test
+    </h1>
+</div>
+
+<div class="slide">
+    <h1>Refactor time!</h1>
+</div>
+
+<div class="slide">
+    <h2>TimelineActivity</h2>
+    <ul>
+        <li>Timeline loading should be moved to a collaborator</li>
+        <li>Let's extract <code>ChirpRepository</code> and implement it as <code>ChirpJsonRepository</code></li>
+    </ul>
+    <h2>tests</h2>
+    <ul>
+        <li>Remove duplication after implementing <code>ChirpJsonRepository</code> test</li>
+    </ul>
+
+    <div class="note">
+        <h3>Demo</h3>
+        <ul>
+            <li>Implement ChirpJsonRepositoryTest</li>
+            <li>Tests are falling</li>
+            <li>Create ChirpRepository interface</li>
+            <li>Implement ChirpRepository as ChirpJsonRepository</li>
+        </ul>
+
+        <ul>
+            <li>before: tracer_bullet</li>
+            <li>after: chirp_repository_extracted</li>
+        </ul>
+    </div>
+</div>
+
+<div class="slide">
+    <h1>Can we get rid of <code>new</code> operator?</h1>
+</div>
+
+<div class="slide">
+    <h2>RoboGuice</h2>
+    <ul>
+        <li>= Google Guice for Android</li>
+        <li>Some changes in our code base:</li>
+        <ul>
+            <li>DI configured programatically through modules</li>
+            <li>Activities must extend from <code>RoboActivity</code></li>
+            <li>Custom <code>Application</code> class</li>
+        </ul>
+        <li>Injection of Views, Resources, Services...</li>
+        <li>Less plumbing code</li>
+    </ul>
+
+    <div class="note">
+        <h3>Demo</h3>
+        <ul>
+            <li>Substitute chirp JSON loading in TimelineActivity by injected ChirpRepository</li>
+            <li>Show that view and inflater injection is possible</li>
+        </ul>
+
+        <h3>Git tags</h3>
+        <ul>
+            <li>before: chirp_repository_extracted</li>
+            <li>after: roboguice_used_for_di</li>
+        </ul>
+    </div>
+</div>
+
+<div class="slide">
+    <h1>Next step - optimization</h1>
+</div>
+
+<div class="slide">
+    <h2>Don't block the activity</h2>
+    <ul>
+        <li>Load timeline in a background thread</li>
+        <li>Display and hide a progress dialog</li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h1>We could use android.os.AsyncTask but...</h1>
+</div>
+
+<div class="slide">
+    <h1>How do we test it?</h1>
+</div>
+
+<div class="slide">
+    <h1>Our first unit test</h1>
+</div>
+
+<div class="slide">
+    <h2>Timeline load task</h2>
+    <ul>
+        <li>Created by the <code>TimelineActivity</code></li>
+        <li>Uses <code>ChirpReposity</code></li>
+        <li>Notifies the activity when chirps are loaded</li>
+        <li>How do we mock the repository?</li>
+    </ul>
+    <h3>JMock works out of the box with Android!</h3>
+</div>
+
+<div class="slide">
+    <h2>Synchronous and asynchronous task test</h2>
+    <ul>
+        <li>Mock the repository with JMock</li>
+        <li>Test first task worker method synchronously</li>
+        <li>Implement lifecycle methods</li>
+        <li>Notify the activity about completion</li>
+        <li>Test worker + lifecycle methods asynchronously</li>
+    </ul>
+    <h3>RoboGuice has a helper classes for background tasks and their tests</h3>
+
+    <div class="note">
+        <h3>Demo</h3>
+        <ul>
+            <li>Write a simple synchronous task unit test with JMock</li>
+            <li>Now try to execute the task without the fake UI thread</li>
+            <li>Show how to test background tasks with RoboGuice</li>
+            <li>Add callbacks (TimelineLoadListener)</li>
+            <li>Extend TimelineLoadTaskTest and test callbacks</li>
+            <li>Use callbacks in TimelineActivity for displaying/hiding the progress dialog</li>
+        </ul>
+
+        <h3>Git tags</h3>
+        <ul>
+            <li>before: roboguice_used_for_di</li>
+            <li>in-between: timeline_load_task_synchronous_test</li>
+            <li>in-between: timeline_load_task_asynchronous_test</li>
+            <li>after: timeline_loading_progress_dialog</li>
+        </ul>
+    </div>
+</div>
+
+<div class="slide">
+    <h1>Wait a second...</h1>
+</div>
+
+<div class="slide">
+    <h1>You told us you would write a unit test</h1>
+</div>
+
+<div class="slide">
+    <h1>But we have to start the emulator, generate the APK and deploy it</h1>
+</div>
+
+<div class="slide">
+    <h1>
+        It's painfully slow<br/>
+        and unit tests should be fast as lightning
+    </h1>
+</div>
+
+<div class="slide">
+    <h2>Unit tests Android way</h2>
+    <ul>
+        <li>Executed in the Dalvik VM by the <code>InstrumentationTestRunner</code></li>
+        <li>You need to dex, package and deploy tests</li>
+        <li>What if we use JUnit directly?</li>
+        <ul>
+            <li>Dependency of <code>com.google.android:android-test</code></li>
+        </ul>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Result</h2>
+    <p>
+        IntellJ IDEA
+        <pre><code class="java">java.lang.RuntimeException: Stub!
+at junit.runner.BaseTestRunner.<init>(BaseTestRunner.java:5)</code></pre>
+        Uses <code>android.jar</code> from Android SDK
+    </p>
+    <p>
+        Command line
+        <pre><code class="java">Running es.osoco.chirp.test.JUnitWorksTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.024 sec</code></pre>
+        Uses <code>junit-3.8.2.jar</code> from Maven repository
+    </p>
+
+    <div class="note">
+        <h3>Demo</h3>
+        <ul>
+            <li>Execute unit tests with IntelliJ IDEA</li>
+            <li>Execute unit tests with Maven</li>
+        </ul>
+
+        <h3>Git tags</h3>
+        <ul>
+            <li>before: timeline_loading_progress_dialog</li>
+            <li>after: junit_works_test</li>
+        </ul>
+    </div>
+</div>
+
+<div class="slide">
+    <h1>:(</h1>
+</div>
+
+<div class="slide">
+    <h1>Solution 1</h1>
+</div>
+
+<div class="slide">
+    <h2>Use TestNG</h2>
+    <ul>
+        <li>Simply add Maven dependency in test scope</li>
+            <li>IntellJ IDEA</li>
+                <pre><code class="java">===============================================
+Custom suite
+Total tests run: 1, Failures: 0, Skips: 0
+===============================================</code></pre>
+            <li>Command line</li>
+            <pre><code class="java">Running TestSuite
+Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.298 sec</code></pre>
+        <li>Only classes independent of the Android API!</li>
+    </ul>
+
+    <div class="note">
+        <h3>Demo</h3>
+        <ul>
+            <li>Execute unit tests with IntelliJ IDEA</li>
+            <li>Execute unit tests with Maven</li>
+            <li>Implement DateFormatterTest and DateFormatter</li>
+        </ul>
+
+        <h3>Git tags</h3>
+        <ul>
+            <li>before: junit_works_test</li>
+            <li>in-between: testng_works_test</li>
+            <li>after: date_formatter_testng_test</li>
+        </ul>
+    </div>
+</div>
+
+<div class="slide">
+    <h1>:|</h1>
+</div>
+
+<div class="slide">
+    <h1>Solution 2</h1>
+</div>
+
+<div class="slide">
+    <h2>Robolectric</h2>
+    <h3>Robotium ~ Selenium in web world</h3>
+    <h3>Robolectric ~ HtmlUnit</h3>
+    <ul>
+        <li>Simulates Android behaviour</li>
+        <li><i>Shadows</i> of Android classes for accessing encapsulated state</li>
+        <li>Expect some rough edges</li>
+        <ul>
+            <li>Chirp application - we cannot test showing and hiding of the ProgressDialog</li>
+            <li>We could switch to the latest snaphot, but RoboGuice DI doesn't work :(</li>
+        </ul>
+    </ul>
+
+    <div class="note">
+        <h3>Demo</h3>
+        <ul>
+            <li>Implement TimelineUnitTest checking the application name (trivial)</li>
+            <li>Try to test if the timeline loading has been triggered; extract AsyncTimelineLoader interface</li>
+            <li>Adapt integration tests</li>
+            <li>Implement TimelineUnitTest checking if the timeline loading has been triggered (now through AsyncTimelineLoader interface)</li>
+        </ul>
+
+        <h3>Git tags</h3>
+        <ul>
+            <li>before: date_formatter_testng_test</li>
+            <li>after: timeline_unit_test</li>
+        </ul>
+    </div>
+</div>
+
+<div class="slide">
+    <h1>Wrap-up</h1>
+</div>
+
+<div class="slide">
+    <h1>Slides followed design and architectular decisions taken on a real customer project</h1>
+</div>
+
+<div class="slide">
+    <h1>We decided to have functional, integration and unit tests in the emulator only</h1>
+</div>
+
+<div class="slide">
+    <h1>Test feedback was slow</h1>
+</div>
+
+<div class="slide">
+    <h1>Results were more tangible</h1>
+</div>
+
+<div class="slide">
+    <h1>Great confidence - only visual tests of layout</h1>
+</div>
+
+<div class="slide">
+    <h1>You run your test in a handset</h1>
+</div>
+
+<div class="slide">
+    <h1>But working on the presentation and adding Robolectric...</h1>
+</div>
+
+<div class="slide">
+    <h1>You get very rapid feedback</h1>
+</div>
+
+<div class="slide">
+    <h1>Faster project start-up phase</h1>
+</div>
+
+<div class="slide">
+    <h1>Better design</h1>
+</div>
+
+<div class="slide">
+    <h1>Helps you test corner cases</h1>
+</div>
+
+<div class="slide">
+    <h1>But it's not a silver bullet...</h1>
+</div>
+
+<div class="slide">
+    <h1>Android SDK is simulated (better or worse)</h1>
+</div>
+
+<div class="slide">
+    <h1>Some functionality doesn't work</h1>
+</div>
+
+<div class="slide">
+    <h1>But it gets better and better with each release!</h1>
+</div>
+
+<div class="slide">
+    <h1>Choose the mix of these frameworks on project-by-project basis</h1>
+</div>
+
+<div class="slide">
+    <h1>Test your app end-to-end</h1>
+</div>
+
+<div class="slide">
+    <h1>But don't forget about unit tests!</h1>
+</div>
+
+<div class="slide">
+    <h1>Questions?</h1>
+</div>
+
+<div class="slide">
+    <h1>
+        Thank you!<br/>
+        ¡Gracias!<br/>
+        Dziękuję!
+    </h1>
+</div>
+
+<div class="slide">
+    <h2>Resources - build tools</h2>
+    <ul>
+        <li><a href="http://code.google.com/p/maven-android-plugin/">maven-android-plugin</a></li>
+        <li><a href="https://github.com/akquinet/android-archetypes">Maven Android archetypes</a></li>
+        <li><a href="http://developer.android.com/guide/developing/projects/projects-cmdline.html">Create Ant project</a></li>
+        <li><a href="http://developer.android.com/guide/developing/building/building-cmdline.html">Build Ant projects</a></li>
+        <li><a href="http://developer.android.com/guide/developing/testing/testing_otheride.html">Create and run test project with Ant</a></li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Resources - testing tools covered by this presentation</h2>
+    <ul>
+        <li><a href="http://developer.android.com/guide/topics/testing/testing_android.html">Testing basics</a></li>
+        <li><a href="http://code.google.com/p/hamcrest/">Hamcrest</a></li>
+        <li><a href="http://code.google.com/p/robotium/">Robotium</a></li>
+        <li><a href="http://code.google.com/p/roboguice/">RoboGuice</a></li>
+        <li><a href="http://www.jmock.org/">JMock</a></li>
+        <li><a href="http://testng.org/">TestNG</a></li>
+        <li><a href="http://pivotal.github.com/robolectric/">Robolectric</a></li>
+        <li><a href="http://www.slideshare.net/joemoore1/tdd-android-applications-with-robolectric">TDD Android Applications with Robolectric</a></li>
+    </ul>
+</div>
+
+<div class="slide">
+    <h2>Resources - other testing tools</h2>
+    <ul>
+        <li><a href="https://github.com/kaeppler/calculon">Calculon - testing DSL for Android views and activities</a></li>
+        <li><a href="http://code.google.com/p/android-mock/">Android Mock - mock framework on the top of EasyMock</a></li>
+    </ul>
+</div>
+
+<a href="#" class="deck-prev-link" title="Previous">&#8592;</a>
+<a href="#" class="deck-next-link" title="Next">&#8594;</a>
+
+<p class="deck-status">
+    <span class="deck-status-current"></span>
+    /
+    <span class="deck-status-total"></span>
+</p>
+
+<form action="." method="get" class="goto-form">
+    <label for="goto-slide">Go to slide:</label>
+    <input type="number" name="slidenum" id="goto-slide"/>
+    <input type="submit" value="Go"/>
+</form>
+
+<a href="." title="Permalink to this slide" class="deck-permalink">#</a>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script src="deck.js/deck.core.js"></script>
+<script src="deck.js/goto/deck.goto.js"></script>
+<script src="deck.js/hash/deck.hash.js"></script>
+<script src="deck.js/menu/deck.menu.js"></script>
+<script src="deck.js/navigation/deck.navigation.js"></script>
+<script src="deck.js/status/deck.status.js"></script>
+<script src="http://yandex.st/highlightjs/6.0/highlight.min.js"></script>
+
+<script src="slides.js"></script>
+
+</body>
+</html>
