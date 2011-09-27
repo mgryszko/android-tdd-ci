@@ -7,6 +7,7 @@ public class ChirpModule extends AbstractAndroidModule {
     @Override
     protected void configure() {
         bind(ChirpRepository.class).to(ChirpJsonRepository.class);
+        bind(AsyncTimelineLoader.class).to(TimelineLoadTask.class);
         bind(ProgressDialog.class).toProvider(LoadingDialogProvider.class);
     }
 }

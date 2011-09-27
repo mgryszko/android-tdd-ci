@@ -13,14 +13,18 @@ import java.util.List;
 public class TimelineActivity extends RoboActivity implements TimelineLoadListener {
     private static final int PROGRESS_DIALOG_ID = 0;
 
-    @Inject
-    private TimelineLoadTask loadTask;
+    private AsyncTimelineLoader timelineLoader;
 
     @InjectView(R.id.timelineView)
     private ListView timelineView;
 
     @Inject
     private ProgressDialog progressDialog;
+
+    @Inject
+    public void setAsyncTimelineLoader(AsyncTimelineLoader timelineLoader) {
+        this.timelineLoader = timelineLoader;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,9 +40,7 @@ public class TimelineActivity extends RoboActivity implements TimelineLoadListen
     }
 
     private void loadTimeline() {
-        loadTask.setLoadListener(this);
-        loadTask.setChirper("mgryszko");
-        loadTask.execute();
+        timelineLoader.loadChirperTimeline("mgryszko", this);
     }
 
     public void timelineLoading() {

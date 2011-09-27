@@ -5,7 +5,7 @@ import roboguice.util.RoboAsyncTask;
 
 import java.util.List;
 
-public class TimelineLoadTask extends RoboAsyncTask<List<Chirp>> {
+public class TimelineLoadTask extends RoboAsyncTask<List<Chirp>> implements AsyncTimelineLoader {
     private ChirpRepository repository;
     private TimelineLoadListener loadListener;
     private String chirper;
@@ -13,14 +13,6 @@ public class TimelineLoadTask extends RoboAsyncTask<List<Chirp>> {
     @Inject
     public TimelineLoadTask(ChirpRepository repository) {
         this.repository = repository;
-    }
-
-    public void setLoadListener(TimelineLoadListener loadListener) {
-        this.loadListener = loadListener;
-    }
-
-    public void setChirper(String chirper) {
-        this.chirper = chirper;
     }
 
     @Override
@@ -40,5 +32,11 @@ public class TimelineLoadTask extends RoboAsyncTask<List<Chirp>> {
     @Override
     protected void onException(Exception e) throws RuntimeException {
         loadListener.timelineLoadError();
+    }
+
+    public void loadChirperTimeline(String chirper, TimelineLoadListener loadListener) {
+        this.chirper = chirper;
+        this.loadListener = loadListener;
+        this.execute();
     }
 }
