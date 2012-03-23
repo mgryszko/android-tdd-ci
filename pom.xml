@@ -18,7 +18,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <android-plugin.version>3.0.0-alpha-7</android-plugin.version>
+        <android-plugin.version>3.1.1</android-plugin.version>
         <compiler-plugin.version>2.3.2</compiler-plugin.version>
         <surefire-plugin.version>2.9</surefire-plugin.version>
         <enforcer-plugin.version>1.0.1</enforcer-plugin.version>
@@ -30,16 +30,16 @@
         <proguard.version>4.4</proguard.version>
 
         <commons-lang.version>2.6</commons-lang.version>
-        <spring-android.version>1.0.0.M4</spring-android.version>
+        <spring-android.version>1.0.0.RC1</spring-android.version>
         <jackson.version>1.8.5</jackson.version>
-        <roboguice.version>1.1.2</roboguice.version>
+        <roboguice.version>1.1.3</roboguice.version>
 
         <hamcrest.version>1.1</hamcrest.version>
         <jmock.version>2.5.1</jmock.version>
-        <robotium.version>2.5</robotium.version>
+        <robotium.version>3.1</robotium.version>
         <testng.version>6.2.1</testng.version>
         <junit4.version>4.8.2</junit4.version>
-        <robolectric.version>1.0-RC1</robolectric.version>
+        <robolectric.version>1.0</robolectric.version>
 
         <android.sdk.platform>7</android.sdk.platform>
         <android.device>emulator</android.device>
@@ -159,7 +159,7 @@
             <plugins>
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-                    <artifactId>maven-android-plugin</artifactId>
+                    <artifactId>android-maven-plugin</artifactId>
                     <version>${android-plugin.version}</version>
                     <inherited>true</inherited>
                     <configuration>

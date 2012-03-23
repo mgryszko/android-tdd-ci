@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:a="http://schemas.android.com/apk/res/android"
-    a:orientation="vertical"
-    a:layout_width="fill_parent"
-    a:layout_height="fill_parent">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
 
     <TextView
-        a:id="@+id/who"
-        a:gravity="center_vertical"
-        a:layout_width="fill_parent"
-        a:layout_height="fill_parent"
-        a:textStyle="bold"
-        a:padding="5dip" />
+        android:id="@+id/who"
+        android:gravity="center_vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:textStyle="bold"
+        android:padding="5dip" />
     <TextView
-        a:id="@+id/message"
-        a:gravity="center_vertical"
-        a:layout_width="fill_parent"
-        a:layout_height="fill_parent"
-        a:padding="5dip" />
+        android:id="@+id/message"
+        android:gravity="center_vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="5dip" />
     <TextView
-        a:id="@+id/timestamp"
-        a:gravity="center_vertical"
-        a:layout_width="fill_parent"
-        a:layout_height="fill_parent"
-        a:padding="5dip" />
+        android:id="@+id/timestamp"
+        android:gravity="center_vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="5dip" />
 </LinearLayout>

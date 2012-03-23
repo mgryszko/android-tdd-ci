@@ -1,5 +1,6 @@
 package es.osoco.chirp;
 
+import java.util.List;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -8,10 +9,8 @@ import com.google.inject.Inject;
 import roboguice.activity.RoboActivity;
 import roboguice.inject.InjectView;
 
-import java.util.List;
-
 public class TimelineActivity extends RoboActivity implements TimelineLoadListener {
-    private static final int PROGRESS_DIALOG_ID = 0;
+    public static final int PROGRESS_DIALOG_ID = 0;
 
     private AsyncTimelineLoader timelineLoader;
 

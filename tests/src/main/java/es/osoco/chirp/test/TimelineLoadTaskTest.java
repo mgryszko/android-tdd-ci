@@ -1,5 +1,7 @@
 package es.osoco.chirp.test;
 
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 import android.test.suitebuilder.annotation.SmallTest;
 import es.osoco.chirp.Chirp;
 import es.osoco.chirp.ChirpRepository;
@@ -9,10 +11,6 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import roboguice.test.RoboUnitTestCase;
 import roboguice.util.RoboLooperThread;
-
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
-
 import static java.util.Arrays.asList;
 
 public class TimelineLoadTaskTest extends RoboUnitTestCase<Application> {
@@ -73,9 +71,7 @@ public class TimelineLoadTaskTest extends RoboUnitTestCase<Application> {
     protected void executeInFakeUIThread(final TimelineLoadTask task) throws InterruptedException {
         new RoboLooperThread() {
             public void run() {
-                task.setLoadListener(loadListener);
-                task.setChirper(CHIRPER);
-                task.execute();
+                task.loadChirperTimeline(CHIRPER, loadListener);
             }
         }.start();
         taskDone.await();
